@@ -61,11 +61,19 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	}
 }
 
-CD3DApp::CD3DApp(HINSTANCE hInst, TCHAR * szClassName, TCHAR * szTitleText,
-		WORD wWndPosX, WORD wWndPosY, WORD wWndWidth, WORD wWndHeight, void (*onResizeWindowFunction)()):
-	m_hInst(hInst), m_wWndPosX(wWndPosX), m_wWndPosY(wWndPosY), 	
-	m_bFullscreen(0), m_bPaused(0), m_pDinput(0), m_pKeyboard(0), m_pMouse(0), m_fpnOnResizeWindow(onResizeWindowFunction)
+void CD3DApp::Init(HINSTANCE hInst, TCHAR * szClassName, TCHAR * szTitleText,
+		WORD wWndPosX, WORD wWndPosY, WORD wWndWidth, WORD wWndHeight, void (*onResizeWindowFunction)())
 {
+	m_hInst = hInst;
+	m_wWndPosX = wWndPosX;
+	m_wWndPosY = wWndPosY, 	
+	m_bFullscreen = 0;
+	m_bPaused = 0; 
+	m_pDinput = 0;
+	m_pKeyboard = 0; 
+	m_pMouse = 0;
+	m_fpnOnResizeWindow = onResizeWindowFunction;
+
 	GetCurrentDirectoryA(MAX_PATH, g_szFileDir);
 
 	g_uiWndWidth = wWndWidth;

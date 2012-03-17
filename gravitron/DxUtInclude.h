@@ -34,6 +34,10 @@
 #include <time.h>
 #include <wchar.h>
 #include "DxUtError.h"
+#include "PhysUtVector.h"
+#include "PhysUtMatrix.h"
+
+using namespace PhysUt;
 
 #define Abs(x) ((x < 0) ? (-x) : x)
 

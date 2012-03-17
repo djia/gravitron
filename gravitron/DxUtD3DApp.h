@@ -32,10 +32,12 @@ private:
 	void PollMouse();
 	friend LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 public:
-	CD3DApp(HINSTANCE hInst, TCHAR * szClassName, TCHAR * szTitleText,
-		WORD wWndPosX, WORD wWndPosY, WORD wWndWidth, WORD wWndHeight, void (*onResizeWindowFunction)());
+	CD3DApp() {}
 	CD3DApp(CD3DApp & cpy); /* Copy constructor should never be called */
 	~CD3DApp() {}
+
+	void Init(HINSTANCE hInst, TCHAR * szClassName, TCHAR * szTitleText,
+		WORD wWndPosX, WORD wWndPosY, WORD wWndWidth, WORD wWndHeight, void (*onResizeWindowFunction)());
 
 	void Loop(void(*loopFunction)());
 

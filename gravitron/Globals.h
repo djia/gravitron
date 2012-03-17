@@ -3,6 +3,7 @@
 #define GLOBALS_H
 
 #include <Windows.h>
+#include <vector>
 
 typedef void(*VoidCallback)(void);
 
