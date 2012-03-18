@@ -60,6 +60,10 @@ public:
 	PhysUt::Matrix4x4F & GetLocalTransform() {return m_LocalTransform; }
 	CBoundingVolume * GetBoundingVolume() {return m_pContactBV; }
 	bool IsStatic() {return m_bIsStatic; }
+
+	void SetLinVel(Vector3F & vel) {
+		m_pRigidBody->GetLinVel() = vel;
+	}
 };
 
 

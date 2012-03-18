@@ -2,6 +2,7 @@
 #include "ObjectManager.h"
 #include "GraphicsManager.h"
 #include "PhysicsManager.h"
+#include "RacerEntity.h"
 
 void CObjectManager::Init(CHAR * szSceneFile)
 {
@@ -18,14 +19,22 @@ void CObjectManager::Init(CHAR * szSceneFile)
 		new CRigidBody(m_Objs[0]->GetID3DX10Mesh(), m_Objs[0]->GetStride(), 10.f));
 	m_nDynamicObjects++;
 
+	//localTransform.MTranslation(0.1f, 25.f, 0.1f);
+	//m_Objs[1] = new CPointGravityEntity(localTransform, 1);
+	//m_Objs[1]->AttachRenderer(new CPNTPhongRenderer("/Models/Sphere.txt", D3DX10_MESH_32_BIT));
+	//m_Objs[1]->AttachBody(new CBSphere(m_Objs[0]->GetID3DX10Mesh(), m_Objs[0]->GetStride()),
+	//	new CRigidBody(m_Objs[0]->GetID3DX10Mesh(), m_Objs[0]->GetStride(), 10.f));
+	//CBSphere * bSphere = new CBSphere(Vector3F(0, 0, 0), 100.f);
+	//m_Objs[1]->AttachForceEnvelope(bSphere);
+	//m_nStaticObjects++;
+
+
 	localTransform.MTranslation(0.1f, 25.f, 0.1f);
-	m_Objs[1] = new CPointGravityEntity(localTransform, 1);
+	m_Objs[1] = new CRacerEntity(localTransform, 1);
 	m_Objs[1]->AttachRenderer(new CPNTPhongRenderer("/Models/Sphere.txt", D3DX10_MESH_32_BIT));
 	m_Objs[1]->AttachBody(new CBSphere(m_Objs[0]->GetID3DX10Mesh(), m_Objs[0]->GetStride()),
 		new CRigidBody(m_Objs[0]->GetID3DX10Mesh(), m_Objs[0]->GetStride(), 10.f));
 	CBSphere * bSphere = new CBSphere(Vector3F(0, 0, 0), 100.f);
-	m_Objs[1]->AttachForceEnvelope(bSphere);
-	//m_nStaticObjects++;
 	m_nDynamicObjects++;
 }
 
