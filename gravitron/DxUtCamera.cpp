@@ -8,8 +8,8 @@ namespace DxUt {
 CCamera::CCamera():m_RightVec(0, 0, 1.f), m_UpVec(0, 1.f, 0), 
 	m_ForwardVec(1.f, 0, 0), m_fAlpha(0), m_fPhi(0), m_fTheta(0)
 {
-	m_View.MIdenity();
-	m_Proj.MIdenity();
+	m_View.MIdentity();
+	m_Proj.MIdentity();
 
 	SetDefaultKeys();
 	SetDefaultMouse();

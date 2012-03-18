@@ -1,6 +1,6 @@
 
-#ifndef BASEENITY_H
-#define BASEENITY_H
+#ifndef BASEENTITY_H
+#define BASEENTITY_H
 
 #include "Globals.h"
 #include "DxUtCamera.h"
@@ -9,7 +9,7 @@
 #include "PhysUtRigidBody.h"
 #include "Renderer.h"
 
-class CBaseEnity {
+class CBaseEntity {
 protected:
 	//Transform from local space to world space
 	PhysUt::Matrix4x4F m_LocalTransform;
@@ -27,11 +27,11 @@ protected:
 	
 	bool m_bIsStatic;
 
-	CBaseEnity() {}
+	CBaseEntity() {}
 public:
-	CBaseEnity(PhysUt::Matrix4x4F & localTransform, bool bIsStatic):
+	CBaseEntity(PhysUt::Matrix4x4F & localTransform, bool bIsStatic):
 	  m_LocalTransform (localTransform), m_bIsStatic(bIsStatic),  m_pFoceEnvelopeBV(0), m_pContactBV(0) {}
-	virtual ~CBaseEnity() {}
+	virtual ~CBaseEntity() {}
 
 	virtual void AttachRenderer(CRenderer * pRenderer) {}
 	virtual void AttachForceEnvelope(CBoundingVolume * pFoceEnvelopeBV);
@@ -40,11 +40,11 @@ public:
 	virtual void ProcessUserInput(KeyState & rKeyState, MouseState & rMouseState) {}
 	virtual void Draw(PhysUt::Matrix4x4F & world, DxUt::CCamera * pCam, DxUt::SLightDir & light) {};
 
-	//Determine if pCollidingEnity and this are within each 
+	//Determine if pCollidingEntity and this are within each 
 	//other's force envelope's and update the force on a RigidBody if so
-	virtual bool DoForceEnvelopeCollision(CBaseEnity * pCollidingEnity) {return 0; }
+	virtual bool DoForceEnvelopeCollision(CBaseEntity * pCollidingEntity) {return 0; }
 
-	void DoContactCollision(CBaseEnity * pCollidingEnity);
+	void DoContactCollision(CBaseEntity * pCollidingEntity);
 
 	void SetTransform(Matrix4x4F & T);
 	void SetForce(Vector3F & force) {m_pRigidBody->GetForce() = force; }

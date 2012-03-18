@@ -4,7 +4,7 @@
 
 #include "Globals.h"
 #include "DxUtD3DApp.h"
-#include "BaseEnity.h"
+#include "BaseEntity.h"
 #include "DxUtFPCamera.h"
 #include "DxUtLight.h"
 
@@ -17,7 +17,7 @@ private:
 
 	DxUt::CD3DApp * m_D3DApp;
 
-	std::vector<CBaseEnity*> m_ObjsInFrustum;
+	std::vector<CBaseEntity*> m_ObjsInFrustum;
 
 	CObjectManager * m_pObjectManager;
 
@@ -36,7 +36,7 @@ public:
 
 	void Render();
 
-	std::vector<CBaseEnity*> & GetObjectsInViewFrustum() {return m_ObjsInFrustum; }
+	std::vector<CBaseEntity*> & GetObjectsInViewFrustum() {return m_ObjsInFrustum; }
 
 	void OnResize();
 	void Destroy();

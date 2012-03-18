@@ -3,12 +3,11 @@
 #define OBJECT_MANAGER_H
 
 #include "Globals.h"
-#include "BaseEnity.h"
-#include "Enities.h"
+#include "BaseEntity.h"
+#include "Entities.h"
 #include <vector>
 
 class CGraphicsManager;
-class CPhysicsManager;
 
 /* x86 - x64 problem with Water */
 class CObjectManager {
@@ -19,7 +18,7 @@ private:
 	//Next m_nStaticObjects of m_Objs are static
 	UINT m_nDynamicObjects;
 	UINT m_nStaticObjects;
-	std::vector<CBaseEnity*> m_Objs;
+	std::vector<CBaseEntity*> m_Objs;
 
 	CGraphicsManager * m_pGraphicsManager;
 public:
@@ -32,7 +31,7 @@ public:
 
 	void Simulate();
 
-	std::vector<CBaseEnity*> & GetObjects() {return m_Objs; }
+	std::vector<CBaseEntity*> & GetObjects() {return m_Objs; }
 
 	void Destroy();
 };

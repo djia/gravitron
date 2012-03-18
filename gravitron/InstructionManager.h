@@ -12,7 +12,6 @@ private:
 	friend class CGameManager;
 
 	CObjectManager * m_pObjManager;
-	CPhysicsManager * m_pPhysicsManager;
 public:
 	CInstructionManager() {}
 	~CInstructionManager() {}

@@ -190,7 +190,7 @@ void CRigidBody::ResolveCollision(CRigidBody & collidingBody, Vector3F & contact
 	Matrix4x4F m1(r1.SkewMatrix3x3F()); m1 = m1*m_InvI*m1;
 	Matrix4x4F m2(r2.SkewMatrix3x3F()); m2 = m2*collidingBody.m_InvI*m2;
 
-	Matrix4x4F id; id.MIdenity();
+	Matrix4x4F id; id.MIdentity();
 	Matrix4x4F K((invM1 + invM2)*id - m1 - m2);
 	Matrix4x4F KInv(K.Inverse()); 
 

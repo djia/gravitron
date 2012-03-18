@@ -47,8 +47,8 @@ void CGraphicsManager::Render()
 	g_pD3DDevice->ClearDepthStencilView(g_pDepthStencilView, D3D10_CLEAR_DEPTH | D3D10_CLEAR_STENCIL, 1.0f, 0);
 
 	Matrix4x4F world;
-	world.MIdenity();
-	CBaseEnity ** rgObject = m_ObjsInFrustum.data();
+	world.MIdentity();
+	CBaseEntity ** rgObject = m_ObjsInFrustum.data();
 	for (UINT i=0, end=m_ObjsInFrustum.size(); i<end; i++) {
 		rgObject[i]->Draw(world, &m_Camera, m_Lights[0]);
 	}

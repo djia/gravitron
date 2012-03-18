@@ -58,7 +58,7 @@ public:
 
 	/* Each operation applies to myself */
 	Matrix4x4F & MZero();
-	Matrix4x4F & MIdenity();
+	Matrix4x4F & MIdentity();
 	Matrix4x4F & MInverse();
 	Matrix4x4F & MTranspose();
 	Matrix4x4F & MInverseTranspose();
@@ -106,7 +106,7 @@ inline Matrix4x4F & Matrix4x4F::MZero()
 	return *this;
 }
 
-inline Matrix4x4F & Matrix4x4F::MIdenity()
+inline Matrix4x4F & Matrix4x4F::MIdentity()
 {
 	m[0][0] = 1.f; m[1][0] = m[2][0] = m[3][0] = 0;
 	m[1][1] = 1.f; m[0][1] = m[2][1] = m[3][1] = 0;
@@ -115,7 +115,7 @@ inline Matrix4x4F & Matrix4x4F::MIdenity()
 	return *this;
 }
 
-inline Matrix4x4F _Idenity4x4F()
+inline Matrix4x4F _Identity4x4F()
 {
 	return Matrix4x4F(
 		1.f, 0, 0, 0,

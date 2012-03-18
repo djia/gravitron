@@ -10,28 +10,29 @@ void CObjectManager::Init(CHAR * szSceneFile)
 	m_nStaticObjects = 0;
 
 	Matrix4x4F localTransform;
-	localTransform.MIdenity();
+	localTransform.MIdentity();
 
-	m_Objs[0] = new CPointGravityEnity(localTransform, 1);
+	m_Objs[0] = new CPointGravityEntity(localTransform, 1);
 	m_Objs[0]->AttachRenderer(new CPNTPhongRenderer("/Models/Sphere.txt", D3DX10_MESH_32_BIT));
 	m_Objs[0]->AttachBody(new CBSphere(m_Objs[0]->GetID3DX10Mesh(), m_Objs[0]->GetStride()),
 		new CRigidBody(m_Objs[0]->GetID3DX10Mesh(), m_Objs[0]->GetStride(), 10.f));
 	m_nDynamicObjects++;
 
 	localTransform.MTranslation(0.1f, 25.f, 0.1f);
-	m_Objs[1] = new CPointGravityEnity(localTransform, 1);
+	m_Objs[1] = new CPointGravityEntity(localTransform, 1);
 	m_Objs[1]->AttachRenderer(new CPNTPhongRenderer("/Models/Sphere.txt", D3DX10_MESH_32_BIT));
 	m_Objs[1]->AttachBody(new CBSphere(m_Objs[0]->GetID3DX10Mesh(), m_Objs[0]->GetStride()),
-		new CRigidBody(m_Objs[0]->GetID3DX10Mesh(), m_Objs[0]->GetStride(), -1.f));
+		new CRigidBody(m_Objs[0]->GetID3DX10Mesh(), m_Objs[0]->GetStride(), 10.f));
 	CBSphere * bSphere = new CBSphere(Vector3F(0, 0, 0), 100.f);
 	m_Objs[1]->AttachForceEnvelope(bSphere);
-	m_nStaticObjects++;
+	//m_nStaticObjects++;
+	m_nDynamicObjects++;
 }
 
 void CObjectManager::ProcessUserInput(KeyState & rKeyState, MouseState & rMouseState)
 {
-	std::vector<CBaseEnity*> & objects = m_pGraphicsManager->GetObjectsInViewFrustum();
-	CBaseEnity ** rgObjects = objects.data();
+	std::vector<CBaseEntity*> & objects = m_pGraphicsManager->GetObjectsInViewFrustum();
+	CBaseEntity ** rgObjects = objects.data();
 	for (UINT i=0, end=objects.size(); i<end; i++) {
 		rgObjects[i]->ProcessUserInput(rKeyState, rMouseState);
 	}
@@ -39,8 +40,8 @@ void CObjectManager::ProcessUserInput(KeyState & rKeyState, MouseState & rMouseS
 
 void CObjectManager::Simulate()
 {
-	CBaseEnity ** rgDynamicObject = m_Objs.data();
-	CBaseEnity ** rgStaticObject = m_Objs.data()+m_nDynamicObjects;
+	CBaseEntity ** rgDynamicObject = m_Objs.data();
+	//CBaseEntity ** rgStaticObject = m_Objs.data()+m_nDynamicObjects;
 
 	float dt = 0.001f;
 	for (UINT i=0; i<m_nDynamicObjects; i++) {
@@ -70,7 +71,7 @@ void CObjectManager::Simulate()
 		rgDynamicObject[i]->m_pRigidBody->RestorePosAndRot();
 		rgDynamicObject[i]->m_pRigidBody->IntegratePos(dt);
 		rgDynamicObject[i]->SetTransform(rgDynamicObject[i]->m_pRigidBody->GetWorldMatrix());
-		rgDynamicObject[i]->m_pRigidBody->IntegrateVel(dt, Vector3F(0, 1.2f, 0));
+		rgDynamicObject[i]->m_pRigidBody->IntegrateVel(dt, Vector3F(0, 0.0f, 0));
 	}
 }
 
@@ -92,8 +93,8 @@ void CObjectManager::Destroy() {
 
 
 /*
-	CBaseEnity ** GetDynamicObjects() {return m_rgObjsDynamic; }
-	CBaseEnity ** GetStaticObjects() {return m_rgObjsStatic; }
+	CBaseEntity ** GetDynamicObjects() {return m_rgObjsDynamic; }
+	CBaseEntity ** GetStaticObjects() {return m_rgObjsStatic; }
 
 	UINT GetNDynamicObjects() {return m_nDynamicObjects; }
 	UINT GetNStaticObjects() {return m_nStaticObjects; }*/

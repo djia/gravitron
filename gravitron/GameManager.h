@@ -56,7 +56,10 @@ public:
 		};
 		m_GraphicsManager.AddLight(light);
 
+		//Instructions
 		m_InstructionManager.Init();
+
+		//Objects
 		m_ObjectManager.Init("Level0");
 	}
 
