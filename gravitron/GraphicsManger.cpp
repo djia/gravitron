@@ -30,7 +30,7 @@ void CGraphicsManager::BeginGraphicsLoop(VoidCallback GraphicsLoop)
 
 void CGraphicsManager::GetUserInput(KeyState & rKeyState, MouseState & rMouseState)
 {
-	memcpy(&rKeyState, g_KeysState, sizeof(CHAR)*256);
+	memcpy(rKeyState.rgKeys, g_KeysState, sizeof(CHAR)*256);
 	memcpy(&rMouseState, &g_MouseState, sizeof(DIMOUSESTATE));
 }
 

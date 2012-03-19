@@ -1,23 +1,9 @@
 
 #include "Entities.h"
 
-CPointGravityEntity::~CPointGravityEntity()
-{
-	delete m_pRenderer;
-}
-
-void CPointGravityEntity::AttachRenderer(CRenderer * pRenderer)
-{
-	m_pRenderer = pRenderer;
-}
-
+////////////////////////////////CPointGravityEntity////////////////////////////////
 void CPointGravityEntity::ProcessUserInput(KeyState & rKeyState, MouseState & rMouseState)
 {
-}
-
-void CPointGravityEntity::Draw(PhysUt::Matrix4x4F & world, DxUt::CCamera * pCam, DxUt::SLightDir & light)
-{
-	m_pRenderer->Draw(world*m_LocalTransform, pCam, light);
 }
 
 bool CPointGravityEntity::DoForceEnvelopeCollision(CBaseEntity * pCollidingEntity)
@@ -25,12 +11,34 @@ bool CPointGravityEntity::DoForceEnvelopeCollision(CBaseEntity * pCollidingEntit
 	if (!m_pFoceEnvelopeBV) return 0;
 
 	Vector3F cp, cn;
-	if (m_pFoceEnvelopeBV->Intersect(pCollidingEntity->GetBoundingVolume(), cp, cn)) {
+	if (m_pFoceEnvelopeBV->Intersect(pCollidingEntity->GetContactBV(), cp, cn)) {
 		//Assume the the colliding entity is a CBSphere
 		Vector3F dir = ((CBSphere*)m_pContactBV)->PosW() -
-			((CBSphere*)pCollidingEntity->GetBoundingVolume())->PosW();
+			((CBSphere*)pCollidingEntity->GetContactBV())->PosW();
 
-		pCollidingEntity->SetForce(m_fGravity*20.f*dir.Normalize());
+		pCollidingEntity->SetForce(m_fGravity*dir.Normalize());
+	} else {
+		pCollidingEntity->SetForce(Vector3F(0, 0, 0));
+	}
+	return 1;
+}
+
+////////////////////////////////CBoxGravityEntity////////////////////////////////
+void CDirectionalGravityEntity::ProcessUserInput(KeyState & rKeyState, MouseState & rMouseState)
+{
+	/*if (m_pFoceEnvelopeBV->Intersect(pCollidingEntity->GetBoundingVolume(), cp, cn)) {
+		m_fGravity = -m_fGravity;
+	}*/
+}
+
+bool CDirectionalGravityEntity::DoForceEnvelopeCollision(CBaseEntity * pCollidingEntity)
+{
+	if (!m_pFoceEnvelopeBV) return 0;
+
+	Vector3F cp, cn;
+	if (m_pFoceEnvelopeBV->Intersect(pCollidingEntity->GetContactBV(), cp, cn)) {
+		m_pFoceEnvelopeBV->Intersect(pCollidingEntity->GetContactBV(), cp, cn);
+		pCollidingEntity->SetForce(m_fGravity*m_GravityDir.Normalize());
 	} else {
 		pCollidingEntity->SetForce(Vector3F(0, 0, 0));
 	}

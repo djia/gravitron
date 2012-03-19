@@ -1,17 +1,20 @@
 
 #include "BaseEntity.h"
 
-void CBaseEntity::AttachForceEnvelope(CBoundingVolume * pFoceEnvelopeBV)
+CBaseEntity::~CBaseEntity() 
 {
-	m_pFoceEnvelopeBV = pFoceEnvelopeBV;
-
-	SetTransform(m_LocalTransform);
+	if (m_pRenderer) {
+		delete m_pRenderer;
+		m_pRenderer = NULL;
+	}
 }
 
-void CBaseEntity::AttachBody(CBoundingVolume * pContactBV, CRigidBody * pContactRigidBody) {
+void CBaseEntity::AttachBody(CBoundingVolume * pContactBV,
+	CRigidBody * pContactRigidBody, CBoundingVolume * pFoceEnvelopeBV) {
 
 	m_pContactBV = pContactBV;
 	m_pRigidBody = pContactRigidBody;
+	m_pFoceEnvelopeBV = pFoceEnvelopeBV;
 
 	SetTransform(m_LocalTransform);
 }

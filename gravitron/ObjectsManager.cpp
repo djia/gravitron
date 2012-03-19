@@ -5,28 +5,35 @@
 
 void CObjectManager::Init(CHAR * szSceneFile)
 {
-	m_Objs.resize(2);
+	m_Objs.resize(3);
 	m_nDynamicObjects = 0;
 	m_nStaticObjects = 0;
 
 	Matrix4x4F localTransform;
 	localTransform.MIdentity();
 
-	m_Objs[0] = new CPointGravityEntity(localTransform, 1);
+	localTransform.MTranslation(1.f, 15.f, 1.1f);
+	m_Objs[0] = new CBaseEntity(localTransform);
 	m_Objs[0]->AttachRenderer(new CPNTPhongRenderer("/Models/Sphere.txt", D3DX10_MESH_32_BIT));
 	m_Objs[0]->AttachBody(new CBSphere(m_Objs[0]->GetID3DX10Mesh(), m_Objs[0]->GetStride()),
-		new CRigidBody(m_Objs[0]->GetID3DX10Mesh(), m_Objs[0]->GetStride(), 10.f));
+		new CRigidBody(m_Objs[0]->GetID3DX10Mesh(), m_Objs[0]->GetStride(), 10.f, .5f), NULL);
 	m_nDynamicObjects++;
 
-	localTransform.MTranslation(0.1f, 25.f, 0.1f);
-	m_Objs[1] = new CPointGravityEntity(localTransform, 1);
+	localTransform.MTranslation(-1.f, 25.f, 1.1f);
+	m_Objs[1] = new CPointGravityEntity(localTransform, 30.f);
 	m_Objs[1]->AttachRenderer(new CPNTPhongRenderer("/Models/Sphere.txt", D3DX10_MESH_32_BIT));
-	m_Objs[1]->AttachBody(new CBSphere(m_Objs[0]->GetID3DX10Mesh(), m_Objs[0]->GetStride()),
-		new CRigidBody(m_Objs[0]->GetID3DX10Mesh(), m_Objs[0]->GetStride(), 10.f));
-	CBSphere * bSphere = new CBSphere(Vector3F(0, 0, 0), 100.f);
-	m_Objs[1]->AttachForceEnvelope(bSphere);
-	//m_nStaticObjects++;
+	m_Objs[1]->AttachBody(new CBSphere(m_Objs[1]->GetID3DX10Mesh(), m_Objs[1]->GetStride()),
+		new CRigidBody(m_Objs[1]->GetID3DX10Mesh(), m_Objs[1]->GetStride(), 10.f, .5f), new CBSphere(Vector3F(0, 0, 0), 10.f));
 	m_nDynamicObjects++;
+
+	Matrix4x4F idenity; 
+	idenity.MIdentity();
+	m_Objs[2] = new CBaseEntity(idenity);
+	m_Objs[2]->AttachRenderer(new CPNTPhongRenderer("/Models/Platform.txt", D3DX10_MESH_32_BIT));
+	m_Objs[2]->AttachBody(new COBBox(m_Objs[2]->GetID3DX10Mesh(), m_Objs[2]->GetStride()),
+		new CRigidBody(m_Objs[2]->GetID3DX10Mesh(), m_Objs[2]->GetStride(), -1.f, 0.f), NULL);//new COBBox(idenity, Vector3F(10.f, 1.f, 10.f)));//CBSphere(Vector3F(0, 0, 0), 100.f));
+	m_nStaticObjects++;
+	//m_nDynamicObjects++;
 }
 
 void CObjectManager::ProcessUserInput(KeyState & rKeyState, MouseState & rMouseState)
@@ -71,7 +78,7 @@ void CObjectManager::Simulate()
 		rgDynamicObject[i]->m_pRigidBody->RestorePosAndRot();
 		rgDynamicObject[i]->m_pRigidBody->IntegratePos(dt);
 		rgDynamicObject[i]->SetTransform(rgDynamicObject[i]->m_pRigidBody->GetWorldMatrix());
-		rgDynamicObject[i]->m_pRigidBody->IntegrateVel(dt, Vector3F(0, 0.0f, 0));
+		rgDynamicObject[i]->m_pRigidBody->IntegrateVel(dt, Vector3F(0, -4.0f, 0));
 	}
 }
 

@@ -1,6 +1,6 @@
 
-
 #include "PhysUtBSphere.h"
+#include <typeinfo.h>
 
 namespace PhysUt {
 
@@ -76,7 +76,7 @@ void CBSphere::Compute(Vector3F * rgVert, DWORD nVert)
 	}
 
 	m_PosL = m_PosW;
-	m_fRadiusL = m_fRadiusL;
+	m_fRadiusL = m_fRadiusW;
 }
 
 bool CBSphere::PointIn(Vector3F & pt)
@@ -86,15 +86,25 @@ bool CBSphere::PointIn(Vector3F & pt)
 
 bool CBSphere::Intersect(CBoundingVolume * v, Vector3F & contactPoint, Vector3F & contactNormal)
 {
-	CBSphere * pBSph = (CBSphere*)v;
-	float d = (m_PosW - pBSph->m_PosW).LengthSq();
-	float r = m_fRadiusW + pBSph->m_fRadiusW;
+	char * bSphereName = (char*)typeid(CBSphere).name();
+	char * name = (char*)typeid(*v).name();
+	if (strcmp(name, bSphereName) == 0) {
+		CBSphere * pBSph = (CBSphere*)v;
+		float d = (m_PosW - pBSph->m_PosW).LengthSq();
+		float r = m_fRadiusW + pBSph->m_fRadiusW;
 
-	if (d <= r*r) {
-		Vector3F dir(m_PosW - pBSph->m_PosW);
-		contactPoint = .5f*dir + pBSph->m_PosW;
-		contactNormal = dir.Normalize();
-		return 1;
+		if (d <= r*r) {
+			Vector3F dir(m_PosW - pBSph->m_PosW);
+			contactPoint = .5f*dir + pBSph->m_PosW;
+			contactNormal = dir.Normalize();
+			return 1;
+		}
+	}
+	else {
+		if (v->Intersect(this, contactPoint, contactNormal)) {
+			contactNormal = -contactNormal;
+			return 1;
+		}
 	}
 	return 0;
 }

@@ -5,6 +5,5 @@
 
 void CInstructionManager::ProcessInput(KeyState & rKeyState, MouseState & rMouseState) {
 
-	//if (rKeyState.rgKeys[VK_F1]) 
-	//	PostQuitMessage(0);
+
 }

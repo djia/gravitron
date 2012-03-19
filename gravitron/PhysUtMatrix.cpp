@@ -1,6 +1,7 @@
 
 #include "PhysUtMatrix.h"
 #include "PhysUtVector.h"
+#include "PhysUtTriangle.h"
 
 namespace PhysUt {
 
@@ -316,6 +317,218 @@ Matrix4x4F & Matrix4x4F::MRotationAxisLH(Vector3F & v, float fTheta)
 	m[0][2] = t*vn.x*vn.z - s*vn.y,	m[1][2] = t*vn.y*vn.z + s*vn.x,	m[2][2] = t*vn.z*vn.z + c,		m[3][2] = 0;
 	m[0][3] = 0,					m[1][3] = 0,					m[2][3] = 0,					m[3][3] = 1;
 	return *this;
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////Functions for Matrix4x4F/////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//Finds the covariance and the mean of a list of vertices in R^3
+void CovarianceVertices3x3F(Vector3F * pVert, DWORD nVert, Matrix4x4F & cov, Vector3F & mean)
+{
+	Vector3F avg(0, 0, 0);
+	for (DWORD i=0; i<nVert; i++)
+		avg += pVert[i];
+	mean = (avg /= (FLOAT)nVert);
+
+	float m02=0, m01=0, m12=0, m00=0, m11=0, m22=0;
+	for (DWORD i=0; i<nVert; i++) {
+		Vector3F pos(pVert[i] - avg);
+
+		m02 = pos.z*pos.x;
+		m01 = pos.y*pos.x;
+		m12 = pos.z*pos.y;
+		m00 = pos.x*pos.x;
+		m11 = pos.y*pos.y;
+		m22 = pos.z*pos.z;
+	}
+    
+	FLOAT mul = 1.f/(FLOAT)nVert;
+	cov.MIdentity();
+	cov.m[0][0] = mul*m00;
+	cov.m[1][1] = mul*m11;
+	cov.m[2][2] = mul*m22;
+	cov.m[2][0] = cov.m[0][2] = mul*m02;
+	cov.m[1][0] = cov.m[0][1] = mul*m01;
+	cov.m[2][1] = cov.m[1][2] = mul*m12;
+}
+
+//Finds the covariance and the mean of a list of triangles in R^3 specified by their vertices
+void CovarianceTriangles3x3F(Vector3F * pVert, DWORD nVert, Matrix4x4F & cov, Vector3F & mean)
+{
+	if (nVert % 3) DxUtSendError("Covariance3x3F nVert must be divisible by 3.");
+
+	DWORD nTri = nVert/3;
+	FLOAT sArea = 0;								//Surface area of all the triangles
+	Vector3F tCtd(0, 0, 0);							//Triangle centroid or mean of the triangles
+	FLOAT m02=0, m01=0, m12=0, m00=0, m11=0, m22=0;
+	for (DWORD i=0, j=0; i<nTri; i++) {
+		STriangleF tri(pVert[j++],  pVert[j++],  pVert[j++]);
+
+		FLOAT area = tri.Area();		sArea += area;
+		Vector3F ctd(tri.Centroid());	tCtd += area*ctd;
+
+		Vector3F * v = tri.vPosW;
+		m02 += area*(9.f*ctd.x*ctd.z +
+			v[0].x*v[0].z + 
+			v[1].x*v[1].z +
+			v[2].x*v[2].z)/12.f;
+
+		m01 += area*(9.f*ctd.x*ctd.y +
+			v[0].x*v[0].y + 
+			v[1].x*v[1].y +
+			v[2].x*v[2].y)/12.f;
+
+		m12 += area*(9.f*ctd.y*ctd.z +
+			v[0].y*v[0].z + 
+			v[1].y*v[1].z +
+			v[2].y*v[2].z)/12.f;
+
+		m00 += area*(9.f*ctd.x*ctd.x +
+			v[0].x*v[0].x + 
+			v[1].x*v[1].x +
+			v[2].x*v[2].x)/12.f;
+
+		m11 += area*(9.f*ctd.y*ctd.y +
+			v[0].y*v[0].y + 
+			v[1].y*v[1].y +
+			v[2].y*v[2].y)/12.f;
+
+		m22 += area*(9.f*ctd.z*ctd.z +
+			v[0].z*v[0].z + 
+			v[1].z*v[1].z +
+			v[2].z*v[2].z)/12.f;
+	}
+	FLOAT mul = 1.f/sArea;
+	mean = mul*tCtd;
+
+	cov.MIdentity();
+	cov.m[0][0] = (m00 - mul*tCtd.x*tCtd.x);
+	cov.m[1][1] = (m11 - mul*tCtd.y*tCtd.y);
+	cov.m[2][2] = (m22 - mul*tCtd.z*tCtd.z);
+	cov.m[2][0] = cov.m[0][2] = (m02 - mul*tCtd.x*tCtd.z);
+	cov.m[1][0] = cov.m[0][1] = (m01 - mul*tCtd.x*tCtd.y);
+	cov.m[2][1] = cov.m[1][2] = (m12 - mul*tCtd.y*tCtd.z);
+}
+
+//Finds the covariance and the mean of a list of triangles in R^3
+void CovarianceTriangles3x3F(STriangleF * pTri, DWORD nTri, Matrix4x4F & cov, Vector3F & mean)
+{
+	FLOAT sArea = 0;								//Surface area of all the triangles
+	Vector3F tCtd(0, 0, 0);							//Triangle centroid or mean of the triangles
+	FLOAT m02=0, m01=0, m12=0, m00=0, m11=0, m22=0;
+	for (DWORD i=0, j=0; i<nTri; i++) {
+		FLOAT area = pTri[i].Area();		sArea += area;
+		Vector3F ctd(pTri[i].Centroid());	tCtd += area*ctd;
+
+		Vector3F * v = pTri[i].vPosW;
+		m02 += area*(9.f*ctd.x*ctd.z +
+			v[0].x*v[0].z + 
+			v[1].x*v[1].z +
+			v[2].x*v[2].z)/12.f;
+
+		m01 += area*(9.f*ctd.x*ctd.y +
+			v[0].x*v[0].y + 
+			v[1].x*v[1].y +
+			v[2].x*v[2].y)/12.f;
+
+		m12 += area*(9.f*ctd.y*ctd.z +
+			v[0].y*v[0].z + 
+			v[1].y*v[1].z +
+			v[2].y*v[2].z)/12.f;
+
+		m00 += area*(9.f*ctd.x*ctd.x +
+			v[0].x*v[0].x + 
+			v[1].x*v[1].x +
+			v[2].x*v[2].x)/12.f;
+
+		m11 += area*(9.f*ctd.y*ctd.y +
+			v[0].y*v[0].y + 
+			v[1].y*v[1].y +
+			v[2].y*v[2].y)/12.f;
+
+		m22 += area*(9.f*ctd.z*ctd.z +
+			v[0].z*v[0].z + 
+			v[1].z*v[1].z +
+			v[2].z*v[2].z)/12.f;
+	}
+	FLOAT mul = 1.f/sArea;
+	mean = mul*tCtd;
+
+	cov.MIdentity();
+	cov.m[0][0] = (m00 - mul*tCtd.x*tCtd.x);
+	cov.m[1][1] = (m11 - mul*tCtd.y*tCtd.y);
+	cov.m[2][2] = (m22 - mul*tCtd.z*tCtd.z);
+	cov.m[2][0] = cov.m[0][2] = (m02 - mul*tCtd.x*tCtd.z);
+	cov.m[1][0] = cov.m[0][1] = (m01 - mul*tCtd.x*tCtd.y);
+	cov.m[2][1] = cov.m[1][2] = (m12 - mul*tCtd.y*tCtd.z);
+}
+
+void JacobiRotation3x3F(Matrix4x4F & A, WORD p, WORD q, DOUBLE & c, DOUBLE & s)
+{
+	if (abs(A.m[p][q]) > .000001) {
+		double t = 0;
+		double r = (A.m[q][q] - A.m[p][p])/(2.0*A.m[p][q]);
+
+        if (r >= 0.0)
+			t = 1.0/(r + sqrt(1.0 + r*r));
+        else t = -1.0/(-r + sqrt(1.0 + r*r));
+
+		c = 1.0/sqrt(1.0 + t*t);
+		s = t*c;
+    }
+	else {
+		c = 1.0;
+		s = 0.0;
+    }
+}
+
+void JacobiTransformation3x3F(Matrix4x4F & A, Matrix4x4F & eiM, Vector3F & eiVal, DWORD maxIter)
+{
+	Matrix4x4F J, _A(A);
+	eiM.MIdentity();
+
+	double c=0, s=0;
+    for (WORD i=0; i<maxIter; i++) {
+		//Up triangle
+		double up=0.0;
+        for (WORD j=0; j<3; j++) {
+            for (WORD k=j+1; k<3; k++) {
+                up += _A.m[j][k];
+            }
+        }
+        if (abs(up) <= .000001) 
+			break;
+
+		for (WORD p=0; p<3; p++) {
+			for (WORD q=p+1; q<3; q++) {
+				JacobiRotation3x3F(_A, p, q, c, s);
+
+				J.MIdentity();
+				J.m[p][p] = (float)c;	 J.m[p][q] = (float)s;
+				J.m[q][p] = (float)(-s); J.m[q][q] = (float)c;
+
+				eiM = eiM*J;
+				_A = (J.Transpose()*_A)*J;
+			}
+		}
+	}
+	eiVal.x = _A.m[0][0];
+	eiVal.y = _A.m[1][1];
+	eiVal.z = _A.m[2][2];
+}
+
+//The column with the largest eiVal will be put in eiVec
+void MaxEigenVectors3x3F(Matrix4x4F & eiM, Vector3F & eiVal, Vector3F & eiVec)
+{
+	WORD col = 0;
+	float best = eiVal.x;
+	if (eiVal.y > best) {best = eiVal.y; col = 1;}
+	if (eiVal.z > best) {best = eiVal.z; col = 2;}
+
+	eiVec.x = eiM.m[0][col];
+	eiVec.y = eiM.m[1][col];
+	eiVec.z = eiM.m[2][col];
 }
 
 

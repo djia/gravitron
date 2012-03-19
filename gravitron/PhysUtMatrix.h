@@ -124,7 +124,6 @@ inline Matrix4x4F _Identity4x4F()
 		0, 0, 0, 1.f);
 }
 
-
 inline Matrix4x4F & Matrix4x4F::MConstruct(Vector3F & t, Matrix4x4F & r)
 {
 	m[0][0] = r.m[0][0], m[1][0] = r.m[1][0], m[2][0] = r.m[2][0], m[3][0] = t.x;
@@ -133,6 +132,31 @@ inline Matrix4x4F & Matrix4x4F::MConstruct(Vector3F & t, Matrix4x4F & r)
 	m[0][3] = 0.f,		 m[1][3] = 0.f,		  m[2][3] = 0.f,	   m[3][3] = 1.f;
 	return *this;
 }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////Functions for Matrix4x4F/////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
+//The matrices in the functions are always in the form meaning
+//  c11 c12 c13 0
+//  c21 c22 c23 0
+//	c31 c32 c33 0
+//  0   0   0   1
+//that the functions treat the matrices as if they were 3x3 ones.
+/////////////////////////////////////////////////////////////////
+
+//Finds the covariance and the mean of a list of vertices in R^3
+void CovarianceVertices3x3F(Vector3F * pVert, DWORD nVert, Matrix4x4F & cov, Vector3F & mean);
+
+//Finds the covariance and the mean of a list of triangles in R^3
+void CovarianceTriangles3x3F(STriangleF * pTri, DWORD nTri, Matrix4x4F & cov, Vector3F & mean);
+
+//Finds the covariance and the mean of a list of triangles in R^3 specified by their vertices
+void CovarianceTriangles3x3F(Vector3F * pVert, DWORD nVert, Matrix4x4F & cov, Vector3F & mean);
+
+void JacobiTransformation3x3F(Matrix4x4F & A, Matrix4x4F & eiM, Vector3F & eiVal, DWORD maxIter=40);
+//The column with the largest eiVal will be put in eiVec
+void MaxEigenVectors3x3F(Matrix4x4F & eiM, Vector3F & eiVal, Vector3F & eiVec);
 
 };
 
