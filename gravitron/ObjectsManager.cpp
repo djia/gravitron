@@ -79,7 +79,7 @@ void CObjectManager::Simulate()
 		rgDynamicObject[i]->m_pRigidBody->RestorePosAndRot();
 		rgDynamicObject[i]->m_pRigidBody->IntegratePos(dt);
 		rgDynamicObject[i]->SetTransform(rgDynamicObject[i]->m_pRigidBody->GetWorldMatrix());
-		rgDynamicObject[i]->m_pRigidBody->IntegrateVel(dt, Vector3F(0, -4.0f, 0));
+		rgDynamicObject[i]->m_pRigidBody->IntegrateVel(dt, Vector3F(0, 10.0f, 0));
 	}
 }
 

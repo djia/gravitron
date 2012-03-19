@@ -60,6 +60,9 @@ public:
 	CRenderer * GetRenderer() {return m_pRenderer; }
 	PhysUt::Matrix4x4F & GetLocalTransform() {return m_LocalTransform; }
 	CBoundingVolume * GetContactBV() {return m_pContactBV; }
+	void SetLinVel(Vector3F vec) {
+		m_pRigidBody->GetLinVel() = vec;
+	}
 };
 
 
