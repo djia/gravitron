@@ -10,7 +10,7 @@ private:
 	float m_fGravity;
 public:
 	CRacerEntity(PhysUt::Matrix4x4F & localTransform, bool bIsStatic):
-	  CBaseEntity(localTransform, bIsStatic) {}
+	  CBaseEntity(localTransform) {}
 	~CRacerEntity();
 
 	void AttachRenderer(CRenderer * pRenderer);

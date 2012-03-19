@@ -57,6 +57,14 @@ Vector3F operator*(Vector3F & v, Matrix4x4F & A)
 		v.x*A.m[0][2] + v.y*A.m[1][2] + v.z*A.m[2][2] + A.m[3][2]);
 }
 
+Vector3F operator^(Matrix4x4F & A, Vector3F & v)
+{
+	return Vector3F(
+		A.m[0][0]*v.x + A.m[0][1]*v.y + A.m[0][2]*v.z,
+		A.m[1][0]*v.x + A.m[1][1]*v.y + A.m[1][2]*v.z,
+		A.m[2][0]*v.x + A.m[2][1]*v.y + A.m[2][2]*v.z);
+}
+
 Matrix4x4F Vector3F::SkewMatrix3x3F()
 {
 	return Matrix4x4F(0, z, -y, 0, -z, 0, x, 0, y, -x, 0, 0, 0, 0, 0, 0);

@@ -30,8 +30,8 @@ protected:
 	void ApplyImpulse(Vector3F & impulse, Vector3F & r); 
 public:
 	CRigidBody();
-	CRigidBody(ID3DX10Mesh * pMesh, DWORD dwStride, FLOAT fMass);
-	CRigidBody(ID3DX10Mesh * pMesh, DWORD dwStride, FLOAT fMass, Vector3F & linVel, Vector3F & angVel);
+	CRigidBody(ID3DX10Mesh * pMesh, DWORD dwStride, FLOAT fMass, FLOAT fElasticity);
+	CRigidBody(ID3DX10Mesh * pMesh, DWORD dwStride, FLOAT fMass, FLOAT fElasticity, Vector3F & linVel, Vector3F & angVel);
 	//~CRigidBody() {}
 
 	/* Mass < 0 represents an infinitely heavy object */

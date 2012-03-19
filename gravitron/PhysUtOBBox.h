@@ -1,30 +1,47 @@
 
-#ifndef DXUTOBBOX_H
-#define DXUTOBBOX_H
+#ifndef PHYSUTOBBOX_H
+#define PHYSUTOBBOX_H
 
-#include "DxUtMesh.h"
+#include "PhysUtBoundingVolume.h"
 
 namespace PhysUt {
 
-class COBBox { 
+class COBBox : public CBoundingVolume {
 protected:
-	friend class BVTree;
+	//friend class BVTree;
 
-	/* The OBB is defined in world space only */
-	/* This class should never be used except for BVTree's use of it */
+	/* The world space 
+	 * Note that all tests will be preformed on world space */
 	Vector3F m_CenterW;			//The center of the OBB
 	Vector3F m_HalfWidthsW;		//The axis length of the OBB
 	Vector3F m_RotVecW[3];		//The axis vectors of the OBB
-private:
+
+	/* The local space BS */
+	Vector3F m_CenterL;
+	Vector3F m_HalfWidthsL;
+	Vector3F m_RotVecL[3];
+public:
 	COBBox();
+	COBBox(ID3DX10Mesh * pMesh, DWORD dwStride);
+	//Set the center, orientation, and halfwidths of the OBBox in local space
+	COBBox(Matrix4x4F & TL, Vector3F & halfWidthsL);
 	//~COBBox() {}
 
 	void Compute(ID3DX10Mesh * pMesh, DWORD dwStride);
-	void ComputeOBB(Vector3F * rgVert, DWORD nVert);
+	void Compute(Vector3F * rgVert, DWORD nVert);
 
-	BOOL PointIn(Vector3F & pt);
+	bool PointIn(Vector3F & pt);
+	bool Intersect(COBBox & oBB);
 	//Rotation, Translation, Scaling of oBB must be expressed relative to the function caller's OBB frame
-	BOOL Intersect(COBBox & oBB, Matrix4x4F & rot, Vector3F & trans, FLOAT fScl);
+	bool Intersect(COBBox & oBB, Matrix4x4F & rot, Vector3F & trans, FLOAT fScl);
+	bool Intersect(CBoundingVolume * pBSph, 
+		Vector3F & contactPoint, Vector3F & contactNormal);
+
+	//TransformOBB is done as follows:
+	//m_CenterW = trans + m_CenterL,
+	//m_RotVecW[i] = rot*m_RotVecL[i],
+	//The transformation is clearly from local space to world space
+	void Transform(Matrix4x4F & T);
 	
 	/* Converts the axis vectors into a rotation matrix of column form */
 	void Rotation(Matrix4x4F & rot);
@@ -33,6 +50,14 @@ private:
 
 	COBBox & operator=(COBBox & ref);
 };
+
+inline void COBBox::Transform(Matrix4x4F & T)
+{
+	m_CenterW = T*m_CenterL;
+	m_RotVecW[0] = T^m_RotVecL[0];
+	m_RotVecW[1] = T^m_RotVecL[1];
+	m_RotVecW[2] = T^m_RotVecL[2];
+}
 
 inline void COBBox::Rotation(Matrix4x4F & rot)
 {

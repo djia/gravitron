@@ -6,6 +6,7 @@
 #include "DxUtCamera.h"
 #include "DxUtLight.h"
 #include "PhysUtBSphere.h"
+#include "PhysUtOBBox.h"
 #include "PhysUtRigidBody.h"
 #include "Renderer.h"
 
@@ -24,21 +25,21 @@ protected:
 	//Dealing with contact between rigid bodies is optional
 	CBoundingVolume * m_pContactBV;
 	CRigidBody * m_pRigidBody;
-	
-	bool m_bIsStatic;
 
 	CBaseEntity() {}
 public:
-	CBaseEntity(PhysUt::Matrix4x4F & localTransform, bool bIsStatic):
-	  m_LocalTransform (localTransform), m_bIsStatic(bIsStatic),  m_pFoceEnvelopeBV(0), m_pContactBV(0) {}
-	virtual ~CBaseEntity() {}
+	CBaseEntity(PhysUt::Matrix4x4F & localTransform):
+	  m_LocalTransform (localTransform),  m_pRenderer(0), m_pFoceEnvelopeBV(0), m_pContactBV(0) {}
+	virtual ~CBaseEntity();
 
-	virtual void AttachRenderer(CRenderer * pRenderer) {}
-	virtual void AttachForceEnvelope(CBoundingVolume * pFoceEnvelopeBV);
-	virtual void AttachBody(CBoundingVolume * pContactBV, CRigidBody * pContactRigidBody);
+	virtual void AttachRenderer(CRenderer * pRenderer) {m_pRenderer = pRenderer; }
+	virtual void AttachBody(CBoundingVolume * pContactBV,
+		CRigidBody * pContactRigidBody, CBoundingVolume * pFoceEnvelopeBV);
 
 	virtual void ProcessUserInput(KeyState & rKeyState, MouseState & rMouseState) {}
-	virtual void Draw(PhysUt::Matrix4x4F & world, DxUt::CCamera * pCam, DxUt::SLightDir & light) {};
+	virtual void Draw(PhysUt::Matrix4x4F & world, DxUt::CCamera * pCam, DxUt::SLightDir & light) {
+		m_pRenderer->Draw(world*m_LocalTransform, pCam, light);
+	}
 
 	//Determine if pCollidingEntity and this are within each 
 	//other's force envelope's and update the force on a RigidBody if so
@@ -58,11 +59,9 @@ public:
 
 	CRenderer * GetRenderer() {return m_pRenderer; }
 	PhysUt::Matrix4x4F & GetLocalTransform() {return m_LocalTransform; }
-	CBoundingVolume * GetBoundingVolume() {return m_pContactBV; }
-	bool IsStatic() {return m_bIsStatic; }
-
-	void SetLinVel(Vector3F & vel) {
-		m_pRigidBody->GetLinVel() = vel;
+	CBoundingVolume * GetContactBV() {return m_pContactBV; }
+	void SetLinVel(Vector3F vec) {
+		m_pRigidBody->GetLinVel() = vec;
 	}
 };
 

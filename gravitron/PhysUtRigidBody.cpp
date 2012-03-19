@@ -14,15 +14,15 @@ CRigidBody::CRigidBody():m_LinVel(0, 0, 0), m_AngVel(0, 0, 0), m_Force(0, 0, 0),
 }
 
 
-CRigidBody::CRigidBody(ID3DX10Mesh * pMesh, DWORD dwStride, FLOAT fMass):m_LinVel(0, 0, 0),
-	m_AngVel(0, 0, 0), m_Force(0, 0, 0), m_Torque(0, 0, 0), m_fElasticity(0.f)
+CRigidBody::CRigidBody(ID3DX10Mesh * pMesh, DWORD dwStride, FLOAT fMass, FLOAT fElasticity):m_LinVel(0, 0, 0),
+	m_AngVel(0, 0, 0), m_Force(0, 0, 0), m_Torque(0, 0, 0), m_fElasticity(fElasticity)
 {
 	CreateRigidBody(pMesh, dwStride, fMass);
 }
 
 CRigidBody::CRigidBody(ID3DX10Mesh * pMesh, DWORD dwStride,
-	FLOAT fMass, Vector3F & linVel, Vector3F & angVel):m_LinVel(0, 0, 0),
-	m_AngVel(0, 0, 0), m_Force(0, 0, 0), m_Torque(0, 0, 0), m_fElasticity(0.f)
+	FLOAT fMass, FLOAT fElasticity, Vector3F & linVel, Vector3F & angVel):m_LinVel(0, 0, 0),
+	m_AngVel(0, 0, 0), m_Force(0, 0, 0), m_Torque(0, 0, 0), m_fElasticity(fElasticity)
 {
 	CreateRigidBody(pMesh, dwStride, fMass);
 	m_LinVel = linVel;

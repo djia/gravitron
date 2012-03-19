@@ -1,8 +1,8 @@
 
 #include "GameManager.h"
-#include <json/json.h>
+//#include <json/json.h>
 
-#pragma comment(lib, "json_vc71_libmtd.lib")
+//#pragma comment(lib, "json_vc71_libmtd.lib")
 
 int WINAPI WinMain(HINSTANCE hInst, HINSTANCE hPreInst, PSTR line, int show)
 {

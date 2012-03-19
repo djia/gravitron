@@ -97,8 +97,12 @@ public:
 	Vector3F Normalize();
 	Vector3F NormalizeSq();
 	Matrix4x4F SkewMatrix3x3F();
+	//Makes v a Vector4F with w = 1.f 
 	friend Vector3F operator*(Matrix4x4F & A, Vector3F & v);
+	//Makes v a Vector4F with w = 1.f 
 	friend Vector3F operator*(Vector3F & v, Matrix4x4F & A);
+	//Makes v a Vector4F with w = 0.f
+	friend Vector3F operator^(Matrix4x4F & A, Vector3F & v);
 };
 
 class Vector4F {
