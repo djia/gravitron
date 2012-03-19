@@ -13,6 +13,7 @@ class CGraphicsManager;
 class CObjectManager {
 private:
 	friend class CGameManager;
+	friend class CInstructionManager;
 
 	//First m_nDynamicObjects of m_Objs are dynamic
 	//Next m_nStaticObjects of m_Objs are static

@@ -2,6 +2,7 @@
 #include "ObjectManager.h"
 #include "GraphicsManager.h"
 #include "PhysicsManager.h"
+#include "RacerEntity.h"
 
 void CObjectManager::Init(CHAR * szSceneFile)
 {
