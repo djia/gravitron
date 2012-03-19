@@ -6,7 +6,7 @@
 
 void CObjectManager::Init(CHAR * szSceneFile)
 {
-	m_Objs.resize(2);
+	m_Objs.resize(3);
 	m_nDynamicObjects = 0;
 	m_nStaticObjects = 0;
 
@@ -32,10 +32,19 @@ void CObjectManager::Init(CHAR * szSceneFile)
 	localTransform.MTranslation(0.1f, 25.f, 0.1f);
 	m_Objs[1] = new CRacerEntity(localTransform, 1);
 	m_Objs[1]->AttachRenderer(new CPNTPhongRenderer("/Models/Sphere.txt", D3DX10_MESH_32_BIT));
-	m_Objs[1]->AttachBody(new CBSphere(m_Objs[0]->GetID3DX10Mesh(), m_Objs[0]->GetStride()),
-		new CRigidBody(m_Objs[0]->GetID3DX10Mesh(), m_Objs[0]->GetStride(), 10.f));
-	CBSphere * bSphere = new CBSphere(Vector3F(0, 0, 0), 100.f);
+	m_Objs[1]->AttachBody(new CBSphere(m_Objs[1]->GetID3DX10Mesh(), m_Objs[1]->GetStride()),
+		new CRigidBody(m_Objs[1]->GetID3DX10Mesh(), m_Objs[1]->GetStride(), 10.f));
+	//CBSphere * bSphere = new CBSphere(Vector3F(0, 0, 0), 100.f);
 	m_nDynamicObjects++;
+
+
+	localTransform.MTranslation(10.1f, 1.f, 10.1f);
+	m_Objs[2] = new CPointGravityEntity(localTransform, 1);
+	m_Objs[2]->AttachRenderer(new CPNTPhongRenderer("/Models/Sphere.txt", D3DX10_MESH_32_BIT));
+	m_Objs[2]->AttachBody(new CBSphere(m_Objs[2]->GetID3DX10Mesh(), m_Objs[2]->GetStride()),
+		new CRigidBody(m_Objs[2]->GetID3DX10Mesh(), m_Objs[2]->GetStride(), 10.f));
+	m_nDynamicObjects++;
+
 }
 
 void CObjectManager::ProcessUserInput(KeyState & rKeyState, MouseState & rMouseState)
@@ -80,7 +89,7 @@ void CObjectManager::Simulate()
 		rgDynamicObject[i]->m_pRigidBody->RestorePosAndRot();
 		rgDynamicObject[i]->m_pRigidBody->IntegratePos(dt);
 		rgDynamicObject[i]->SetTransform(rgDynamicObject[i]->m_pRigidBody->GetWorldMatrix());
-		rgDynamicObject[i]->m_pRigidBody->IntegrateVel(dt, Vector3F(0, 0.0f, 0));
+		rgDynamicObject[i]->m_pRigidBody->IntegrateVel(dt, Vector3F(0, 10.0f, 0));
 	}
 }
 
