@@ -33,10 +33,19 @@ private:
 		//}
 
 		if(g_KeysState[2]) {
-			GetGameManager().m_ObjectManager.LoadLevel(1);
+			GetGameManager().m_ObjectManager.LoadLevel(0);
 			GetGameManager().m_GraphicsManager.m_Camera.SetRacer(GetGameManager().m_ObjectManager.GetRacer());
 		} else if(g_KeysState[3]) {
+			GetGameManager().m_ObjectManager.LoadLevel(1);
+			GetGameManager().m_GraphicsManager.m_Camera.SetRacer(GetGameManager().m_ObjectManager.GetRacer());
+		} else if(g_KeysState[4]) {
 			GetGameManager().m_ObjectManager.LoadLevel(2);
+			GetGameManager().m_GraphicsManager.m_Camera.SetRacer(GetGameManager().m_ObjectManager.GetRacer());
+		} else if(g_KeysState[5]) {
+			GetGameManager().m_ObjectManager.LoadLevel(3);
+			GetGameManager().m_GraphicsManager.m_Camera.SetRacer(GetGameManager().m_ObjectManager.GetRacer());
+		} else if(g_KeysState[6]) {
+			GetGameManager().m_ObjectManager.LoadLevel(4);
 			GetGameManager().m_GraphicsManager.m_Camera.SetRacer(GetGameManager().m_ObjectManager.GetRacer());
 		}
 

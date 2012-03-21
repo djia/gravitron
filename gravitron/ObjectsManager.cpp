@@ -7,7 +7,7 @@
 
 void CObjectManager::Init(CHAR * szSceneFile)
 {
-	m_CurrentLevel = (UINT)1;
+	m_CurrentLevel = (UINT)0;
 	LoadLevel(m_CurrentLevel);
 	//std::ifstream fileStream("Levels/level2.txt" , std::ifstream::in);
 
@@ -112,9 +112,7 @@ void CObjectManager::RestartLevel() {
 }
 
 void CObjectManager::NextLevel() {
-	m_CurrentLevel += 2;
-	m_CurrentLevel = m_CurrentLevel % 2;
-	m_CurrentLevel++;
+	m_CurrentLevel = m_CurrentLevel % 5;
 	LoadLevel(m_CurrentLevel);
 }
 
