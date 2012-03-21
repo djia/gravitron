@@ -1,0 +1,8 @@
+5 1
+
+CRacerEntity		/Models/Sphere.txt	10	0.5	0	0	0	0	0	0	0
+
+CPointGravityEntity	/Models/Sphere.txt	-10	0.5	200	100	0	-60	0	20	2
+CPointGravityEntity	/Models/Sphere.txt	-10	0.5	-200	100	0	-150	0	20	-2
+CPlatformEntity		/Models/Platform.txt	-10	0.5	0	0	0	-20	0	0	0
+CFinalPlatformEntity	/Models/Platform.txt	-10	0.5	0	0	0	-450	0	0	0
