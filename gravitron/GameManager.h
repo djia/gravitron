@@ -17,6 +17,8 @@ private:
 	CGraphicsManager	m_GraphicsManager;
 
 	static void GameLoop() {
+		GetGameManager().m_ObjectManager.SetForcesToZero();
+
 		KeyState ks;
 		MouseState ms;
 		GetGameManager().m_GraphicsManager.GetUserInput(ks, ms);
@@ -61,6 +63,8 @@ public:
 
 		//Objects
 		m_ObjectManager.Init("Level0");
+
+		m_GraphicsManager.m_Camera.SetRacer(m_ObjectManager.GetRacer());
 	}
 
 	void Run() {

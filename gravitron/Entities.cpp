@@ -16,10 +16,13 @@ bool CPointGravityEntity::DoForceEnvelopeCollision(CBaseEntity * pCollidingEntit
 		Vector3F dir = ((CBSphere*)m_pContactBV)->PosW() -
 			((CBSphere*)pCollidingEntity->GetContactBV())->PosW();
 
-		pCollidingEntity->SetForce(m_fGravity*dir.Normalize());
-	} else {
-		pCollidingEntity->SetForce(Vector3F(0, 0, 0));
+		if(gravitySign != pCollidingEntity->gravitySign) {
+			pCollidingEntity->AddToForce(m_fGravity*dir.Normalize());
+		} else {
+			pCollidingEntity->AddToForce(-m_fGravity*dir.Normalize());
+		}
 	}
+
 	return 1;
 }
 
@@ -38,9 +41,7 @@ bool CDirectionalGravityEntity::DoForceEnvelopeCollision(CBaseEntity * pCollidin
 	Vector3F cp, cn;
 	if (m_pFoceEnvelopeBV->Intersect(pCollidingEntity->GetContactBV(), cp, cn)) {
 		m_pFoceEnvelopeBV->Intersect(pCollidingEntity->GetContactBV(), cp, cn);
-		pCollidingEntity->SetForce(m_fGravity*m_GravityDir.Normalize());
-	} else {
-		pCollidingEntity->SetForce(Vector3F(0, 0, 0));
+		pCollidingEntity->AddToForce(m_fGravity*m_GravityDir.Normalize());
 	}
 	return 1;
 }

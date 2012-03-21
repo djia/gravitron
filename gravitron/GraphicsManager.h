@@ -5,8 +5,9 @@
 #include "Globals.h"
 #include "DxUtD3DApp.h"
 #include "BaseEntity.h"
-#include "DxUtFPCamera.h"
+//#include "DxUtFPCamera.h"
 #include "DxUtLight.h"
+#include "DxUtOrbitCamera.h"
 
 class CGameManager;
 class CObjectManager;
@@ -21,7 +22,8 @@ private:
 
 	CObjectManager * m_pObjectManager;
 
-	DxUt::CFPCamera m_Camera;
+	//DxUt::CFPCamera m_Camera;
+	DxUt::COrbitCamera m_Camera;
 
 	std::vector<DxUt::SLightDir> m_Lights;
 public:

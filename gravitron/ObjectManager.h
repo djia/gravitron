@@ -6,6 +6,7 @@
 #include "BaseEntity.h"
 #include "Entities.h"
 #include <vector>
+#include "RacerEntity.h"
 
 class CGraphicsManager;
 
@@ -21,6 +22,8 @@ private:
 	UINT m_nStaticObjects;
 	std::vector<CBaseEntity*> m_Objs;
 
+	CRacerEntity * m_Racer;
+
 	CGraphicsManager * m_pGraphicsManager;
 public:
 	CObjectManager() {}
@@ -33,6 +36,10 @@ public:
 	void Simulate();
 
 	std::vector<CBaseEntity*> & GetObjects() {return m_Objs; }
+
+	void SetForcesToZero();
+
+	CRacerEntity * GetRacer() {return m_Racer;};
 
 	void Destroy();
 };

@@ -19,8 +19,10 @@ void CGraphicsManager::Init(HINSTANCE hInst, TCHAR * szClassName, TCHAR * szTitl
 
 	//Create camera
 	//TODO: elmininate the hard coded data
-	m_Camera.CreateFPCameraLH(.5*D3DX_PI, g_uiWndWidth, g_uiWndHeight, 1.f, 500.f, PhysUt::Vector3F(.5f, .5f, .5f), .01f);
-	m_Camera.SetFPCamera(PhysUt::Vector3F(0, 15.f, -15.5f), .5*D3DX_PI, 0);
+	//m_Camera.CreateFPCameraLH(.5*D3DX_PI, g_uiWndWidth, g_uiWndHeight, 1.f, 500.f, PhysUt::Vector3F(.5f, .5f, .5f), .01f);
+	//m_Camera.SetFPCamera(PhysUt::Vector3F(0, 15.f, -15.5f), .5*D3DX_PI, 0);
+	m_Camera.CreateOrbitCameraLH(.5*D3DX_PI, g_uiWndWidth, g_uiWndHeight, 1.f, 500.f, PhysUt::Vector3F(.5f, .5f, .5f), .01f);
+	m_Camera.SetOrbitCamera(PhysUt::Vector3F(0, 15.f, -15.5f), .5*D3DX_PI, 0);
 }
 
 void CGraphicsManager::BeginGraphicsLoop(VoidCallback GraphicsLoop)
@@ -37,7 +39,7 @@ void CGraphicsManager::GetUserInput(KeyState & rKeyState, MouseState & rMouseSta
 void CGraphicsManager::Render()
 {
 	//TODO: Make update function 
-	m_Camera.UpdateFPCamera(50.f*DxUt::g_SPFrame);
+	m_Camera.UpdateOrbitCamera(50.f*DxUt::g_SPFrame);
 
 	//Update Objects in frustum
 	m_ObjsInFrustum = m_pObjectManager->GetObjects();

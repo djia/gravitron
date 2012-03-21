@@ -66,9 +66,19 @@ public:
 	Vector3F & GetLinVel() {return m_LinVel;}
 	Vector3F & GetAngVel() {return m_AngVel;}
 	Vector3F & GetForce() {return m_Force;}
+	void SetForce(Vector3F &force) {m_Force = force;}
+	void SetLinAcc(Vector3F &acc) {m_Force = (1.0f / m_InvMass) * acc;}
+	void AddToForce(Vector3F &force) {
+		m_Force.x = m_Force.x + force.x;
+		m_Force.y = m_Force.y + force.y;
+		m_Force.z = m_Force.z + force.z;
+	}
+	void AddToAcc(Vector3F &acc) {
+		AddToForce((1.0f / m_InvMass) * acc);
+	}
 	Vector3F & GetTorque() {return m_Torque;}
 
-	FLOAT & GetMass() {return m_InvMass;}
+	FLOAT GetMass() {return 1.0f / m_InvMass;}
 	FLOAT & GetElasticity() {return m_fElasticity;}
 	FLOAT & GetFriction() {return m_fMu;}
 };

@@ -28,8 +28,10 @@ protected:
 
 	CBaseEntity() {}
 public:
+	bool gravitySign;
+
 	CBaseEntity(PhysUt::Matrix4x4F & localTransform):
-	  m_LocalTransform (localTransform),  m_pRenderer(0), m_pFoceEnvelopeBV(0), m_pContactBV(0) {}
+	  m_LocalTransform (localTransform),  m_pRenderer(0), m_pFoceEnvelopeBV(0), m_pContactBV(0), gravitySign(false) {}
 	virtual ~CBaseEntity();
 
 	virtual void AttachRenderer(CRenderer * pRenderer) {m_pRenderer = pRenderer; }
@@ -62,6 +64,21 @@ public:
 	CBoundingVolume * GetContactBV() {return m_pContactBV; }
 	void SetLinVel(Vector3F vec) {
 		m_pRigidBody->GetLinVel() = vec;
+	}
+	Vector3F GetLinVel() {
+		return m_pRigidBody->GetLinVel();
+	}
+	void SetLinAcc(Vector3F vec) {
+		m_pRigidBody->SetLinAcc(vec);
+	}
+	void AddToForce(Vector3F force) {
+		m_pRigidBody->AddToForce(force);
+	}
+	void AddToAcc(Vector3F acc) {
+		m_pRigidBody->AddToAcc(acc);
+	}
+	Vector3F GetPos() {
+		return m_pRigidBody->GetPos();
 	}
 };
 
