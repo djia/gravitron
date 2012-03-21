@@ -16,6 +16,8 @@ private:
 	CObjectManager		m_ObjectManager;
 	CGraphicsManager	m_GraphicsManager;
 
+	UINT m_nSuccess;
+
 	static void GameLoop() {
 		GetGameManager().m_ObjectManager.SetForcesToZero();
 
@@ -32,8 +34,34 @@ private:
 
 		if(g_KeysState[2]) {
 			GetGameManager().m_ObjectManager.LoadLevel(1);
+			GetGameManager().m_GraphicsManager.m_Camera.SetRacer(GetGameManager().m_ObjectManager.GetRacer());
 		} else if(g_KeysState[3]) {
 			GetGameManager().m_ObjectManager.LoadLevel(2);
+			GetGameManager().m_GraphicsManager.m_Camera.SetRacer(GetGameManager().m_ObjectManager.GetRacer());
+		}
+
+		//check if the user has lost
+		Vector3F racerPos = GetGameManager().m_ObjectManager.GetRacer()->GetPos();
+		Vector3F finalPlatformPos = GetGameManager().m_ObjectManager.GetFinalPlatform()->GetPos();
+		if(racerPos.y - finalPlatformPos.y <= -50) {
+			MessageBox(g_hWnd, L"You die", L"You die", 0);
+			// use has lost, restart level
+			GetGameManager().m_ObjectManager.RestartLevel();
+			GetGameManager().m_GraphicsManager.m_Camera.SetRacer(GetGameManager().m_ObjectManager.GetRacer());
+		}
+
+		//check if user has won
+		if(racerPos.y - finalPlatformPos.y <= 5 && abs(racerPos.x - finalPlatformPos.x) < 20 && abs(racerPos.z - finalPlatformPos.z) < 20) {
+			GetGameManager().m_nSuccess++;
+		} else {
+			GetGameManager().m_nSuccess = 0;
+		}
+		if(GetGameManager().m_nSuccess >= 300) {
+			MessageBox(g_hWnd, L"You win!", L"You win!", 0);
+			GetGameManager().m_nSuccess = 0;
+			// go to next level
+			GetGameManager().m_ObjectManager.NextLevel();
+			GetGameManager().m_GraphicsManager.m_Camera.SetRacer(GetGameManager().m_ObjectManager.GetRacer());
 		}
 
 		GetGameManager().m_ObjectManager.Simulate();
@@ -52,6 +80,7 @@ private:
 	}
 public:
 	void Init(HINSTANCE hInst) {
+		m_nSuccess = 0;
 		// Memory leak checking
 		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 		//_CrtSetBreakAlloc(183);

@@ -7,7 +7,8 @@
 
 void CObjectManager::Init(CHAR * szSceneFile)
 {
-	LoadLevel(1);
+	m_CurrentLevel = (UINT)1;
+	LoadLevel(m_CurrentLevel);
 	//std::ifstream fileStream("Levels/level2.txt" , std::ifstream::in);
 
 	//char buf[256];
@@ -106,7 +107,19 @@ void CObjectManager::Init(CHAR * szSceneFile)
 
 }
 
+void CObjectManager::RestartLevel() {
+	LoadLevel(m_CurrentLevel);
+}
+
+void CObjectManager::NextLevel() {
+	m_CurrentLevel += 2;
+	m_CurrentLevel = m_CurrentLevel % 2;
+	m_CurrentLevel++;
+	LoadLevel(m_CurrentLevel);
+}
+
 void CObjectManager::LoadLevel(UINT level) {
+	m_CurrentLevel = level;
 	// clear everything
 	ResetAll();
 
@@ -128,8 +141,8 @@ void CObjectManager::LoadLevel(UINT level) {
 		if (!fileStream) break;
 
 		// get the next set of values
-		char values[10][256];
-		for(int j = 0; j < 9; j++) {
+		char values[11][256];
+		for(int j = 0; j < 11; j++) {
 			fileStream >> values[j];
 		}
 
@@ -146,7 +159,7 @@ void CObjectManager::LoadLevel(UINT level) {
 		} else if(strcmp(values[0], "CPointGravityEntity") == 0) {
 			Matrix4x4F localTransform;
 			localTransform.MTranslation(atof(values[6]), atof(values[7]), atof(values[8]));
-			m_Objs[i] = new CPointGravityEntity(localTransform, atof(values[4]));
+			m_Objs[i] = new CPointGravityEntity(localTransform, atof(values[4]), atof(values[9]), atof(values[10]));
 			m_Objs[i]->AttachRenderer(new CPNTPhongRenderer(values[1], D3DX10_MESH_32_BIT));
 			m_Objs[i]->AttachBody(new CBSphere(m_Objs[i]->GetID3DX10Mesh(), m_Objs[i]->GetStride()),
 				new CRigidBody(m_Objs[i]->GetID3DX10Mesh(), m_Objs[i]->GetStride(), atof(values[2]), atof(values[3])), new CBSphere(Vector3F(0, 0, 0), atof(values[5])));
@@ -157,6 +170,15 @@ void CObjectManager::LoadLevel(UINT level) {
 			m_Objs[i]->AttachRenderer(new CPNTPhongRenderer(values[1], D3DX10_MESH_32_BIT));
 			m_Objs[i]->AttachBody(new COBBox(m_Objs[i]->GetID3DX10Mesh(), m_Objs[i]->GetStride()),
 				new CRigidBody(m_Objs[i]->GetID3DX10Mesh(), m_Objs[i]->GetStride(),  atof(values[2]), atof(values[3])), NULL);
+		} else if(strcmp(values[0], "CFinalPlatformEntity") == 0) {
+			Matrix4x4F localTransform;
+			localTransform.MTranslation(atof(values[6]), atof(values[7]), atof(values[8]));
+			m_Objs[i] = new CBaseEntity(localTransform);
+			m_Objs[i]->AttachRenderer(new CPNTPhongRenderer(values[1], D3DX10_MESH_32_BIT));
+			m_Objs[i]->AttachBody(new COBBox(m_Objs[i]->GetID3DX10Mesh(), m_Objs[i]->GetStride()),
+				new CRigidBody(m_Objs[i]->GetID3DX10Mesh(), m_Objs[i]->GetStride(),  atof(values[2]), atof(values[3])), NULL);
+			// set the final platform
+			m_FinalPlatform = m_Objs[i];
 		} else {
 			break;
 		}
@@ -215,7 +237,7 @@ void CObjectManager::Simulate()
 		rgDynamicObject[i]->m_pRigidBody->RestorePosAndRot();
 		rgDynamicObject[i]->m_pRigidBody->IntegratePos(dt);
 		rgDynamicObject[i]->SetTransform(rgDynamicObject[i]->m_pRigidBody->GetWorldMatrix());
-		rgDynamicObject[i]->m_pRigidBody->IntegrateVel(dt, Vector3F(0, -10.0f, 0));
+		rgDynamicObject[i]->m_pRigidBody->IntegrateVel(dt, Vector3F(0, -9.80f, 0));
 	}
 }
 

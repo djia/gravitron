@@ -14,6 +14,11 @@ class CBaseEntity {
 protected:
 	//Transform from local space to world space
 	PhysUt::Matrix4x4F m_LocalTransform;
+	Vector3F m_InitialPos;
+	// the current angle that the object is rotated to, if it's a rotating object
+	float m_Theta;
+	float m_Radius;
+	float m_ThetaVel;
 
 	//Rendering
 	CRenderer * m_pRenderer;
@@ -31,7 +36,9 @@ public:
 	bool gravitySign;
 
 	CBaseEntity(PhysUt::Matrix4x4F & localTransform):
-	  m_LocalTransform (localTransform),  m_pRenderer(0), m_pFoceEnvelopeBV(0), m_pContactBV(0), gravitySign(false) {}
+	  m_LocalTransform (localTransform),  m_pRenderer(0), m_pFoceEnvelopeBV(0), m_pContactBV(0), gravitySign(false), m_Theta(0), m_Radius(0), m_ThetaVel(0) {
+		m_InitialPos = m_LocalTransform.GetColumnVec3F(3);
+	}
 	virtual ~CBaseEntity();
 
 	virtual void AttachRenderer(CRenderer * pRenderer) {m_pRenderer = pRenderer; }

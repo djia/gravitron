@@ -55,6 +55,7 @@ public:
 	}
 
 	Vector3F const & GetPos() {return m_Pos;}
+	void SetPos(Vector3F & pos) {m_Pos = pos;}
 	Matrix4x4F const & GetRot() {return m_Rot; }
 	Matrix4x4F GetWorldMatrix() {
 		Matrix4x4F m(m_Rot);

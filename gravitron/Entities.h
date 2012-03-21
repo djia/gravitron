@@ -11,6 +11,13 @@ private:
 public:
 	CPointGravityEntity(PhysUt::Matrix4x4F & localTransform, float fGravity):
 	  CBaseEntity(localTransform), m_fGravity(fGravity) {}
+
+	CPointGravityEntity(PhysUt::Matrix4x4F & localTransform, float fGravity, float radius, float thetaVel):
+	  CBaseEntity(localTransform), m_fGravity(fGravity) {
+		m_Radius = radius;
+		m_ThetaVel = thetaVel;
+	}
+
 	~CPointGravityEntity() {}
 
 	void ProcessUserInput(KeyState & rKeyState, MouseState & rMouseState);

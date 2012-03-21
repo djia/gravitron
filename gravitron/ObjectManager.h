@@ -23,6 +23,9 @@ private:
 	std::vector<CBaseEntity*> m_Objs;
 
 	CRacerEntity * m_Racer;
+	CBaseEntity * m_FinalPlatform;
+	// the current level
+	UINT m_CurrentLevel;
 
 	CGraphicsManager * m_pGraphicsManager;
 public:
@@ -32,6 +35,10 @@ public:
 	void Init(CHAR * szSceneFile);
 
 	void LoadLevel(UINT level);
+
+	void RestartLevel();
+
+	void NextLevel();
 	
 	void ResetAll();
 
@@ -44,6 +51,7 @@ public:
 	void SetForcesToZero();
 
 	CRacerEntity * GetRacer() {return m_Racer;};
+	CBaseEntity * GetFinalPlatform() {return m_FinalPlatform;};
 
 	void Destroy();
 };
