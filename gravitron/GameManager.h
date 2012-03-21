@@ -24,6 +24,18 @@ private:
 		GetGameManager().m_GraphicsManager.GetUserInput(ks, ms);
 		GetGameManager().m_InstructionManager.ProcessInput(ks, ms);
 
+		//for(int i = 0; i < 256; i++) {
+		//	if(g_KeysState[i]) {
+		//		int a = 10;
+		//	}
+		//}
+
+		if(g_KeysState[2]) {
+			GetGameManager().m_ObjectManager.LoadLevel(1);
+		} else if(g_KeysState[3]) {
+			GetGameManager().m_ObjectManager.LoadLevel(2);
+		}
+
 		GetGameManager().m_ObjectManager.Simulate();
 
 		GetGameManager().m_GraphicsManager.Render();

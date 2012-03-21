@@ -31,6 +31,10 @@ public:
 
 	void Init(CHAR * szSceneFile);
 
+	void LoadLevel(UINT level);
+	
+	void ResetAll();
+
 	void ProcessUserInput(KeyState & rKeyState, MouseState & rMouseState);
 
 	void Simulate();
